@@ -1,0 +1,159 @@
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+	<!------ Include the above in your HEAD tag ---------->
+	<title>Listar Alunos</title>
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+			<div class="collapse navbar-collapse" id="textoNavbar">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+					<a class="nav-link" th:href="@{/dashboard}"><i class="fa fa-home"></i>Home<span class="sr-only">(Página atual)</span></a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown"><i class="fa fa-user"></i>Aluno</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" th:href="@{/aluno/editar}"> <i class="fa fa-pencil-square"></i>Editar</a>
+							<a class="dropdown-item" th:href="@{/aluno/deletar}"> <i class="fa fa-trash"></i>Excluir</a>
+							<a class="dropdown-item" th:href="@{/aluno/inserir}"> <i class="fa fa-graduation-cap"></i>Inserir</a>
+							<a class="dropdown-item" th:href="@{/aluno/listar}"> <i class="fa fa-search"></i>Listar</a>	
+						</div>
+					</li>
+				</ul>
+				<span class="navbar-text">
+					<div class="collapse navbar-collapse" id="textoNavbar">
+						<ul class="navbar-nav mr-auto">
+							<li class="nav-item">
+								<a class="nav-link" href="#">Sair</a>
+							</li>
+						</ul>
+					</div>
+				</span>
+			</div>
+		</nav>
+	</header>
+	<div class="container">
+		<h2 class="text center">>Listar Alunos</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="text-center"scope="col">Nome</th>
+					<th class="text-center"scope="col">Curso</th>
+					<th class="text-center"scope="col">Martrícula</th>
+					<th class="text-center"scope="col">cpf</th>
+					<th class="text-center"scope="col">Status</th>
+					<th class="text-center"scope="col">Turno</th>
+					<th class="text-center"scope="col">Alterar</th>
+					<th class="text-center"scope="col">Excluir</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr scope="row" th:each="aluno: ${Alunos}">
+					<td class="text center" th:text="${aluno.nome}"></td>
+					<td class="text center" th:text="${aluno.curso}"></td>
+					<td class="text center" th:text="${aluno.matricula}"></td>
+					<td class="text center" th:text="${aluno.cpf}"></td>
+					<td class="text center" th:text="${aluno.status}"></td>
+					<td class="text center" th:text="${aluno.turno}"></td>
+					     <a class="btn btn-secondary" th:ref="@{/aluno/alterar/ {id} (id=${aluno.id})}"></tr>
+					</a>
+					<td class="text center">
+						<a class="btn btn-danger" th:ref="@{/aluno/excluir/ {id} (id=${aluno.id})}"></a>
+                        <i class="fa fa-trash"></i> 
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<form action="/aluno/inserir" th:object="${aluno}" method="Post" 
+	 name="formulario">
+		<div class="col-md-6 offset-md-3">
+			<div class="alert alert-danger" role="alert" th:if="${msg}">
+				 <strong th:text="${msg}"></strong>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-6 offset-md-3">
+				<label>Nome</label>
+				<input type="text" name="nome" id="nome" class="form-control" 
+				placeholder="Digite o Nome"
+				th:field="*{nome}" required>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-6 offset-md-3">
+				<label>Cpf</label>
+				<input type="text" maxlength="11" pattern="[0-9]{11}" name="cpf" 
+				id="cpf" class="form-control" placeholder="CPF (apenas números)"
+				th:field="*{cpf}" required>
+			</div>
+		</div>
+			
+		<div class="form-group">
+			<div class="col-md-6 offset-md-3">
+				<label>Selecione o Curso</label>
+				<select class="form-control" th:field="*{curso}">
+					<option th:each="curso:${T(com.projeto.ads.Enum.Curso).
+					values()}" th:value="${curso}"
+					th:text="${curso}">
+					</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-6 offset-md-3">
+				<label>Selecione o Status</label>
+				<select class="form-control" th:field="*{status}">
+					<option th:each="status:${T(com.projeto.ads.Enum.Status).
+					values()}" th:value="${status}"
+					th:text="${status}">
+					</option>
+				</select>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-6 offset-md-3">
+				<label>Selecione o Período</label>
+				<select class="form-control" th:field="*{periodo}">
+					<option th:each="status:${T(com.projeto.ads.Enum.Periodo).
+					values()}" th:value="${periodo}"
+					th:text="${periodo}">
+					</option>
+				</select>
+			</div>
+		</div>	
+		
+		<div class="form-group">
+			<div class="col-md-6 offset-md-3">
+				<label>Selecione o Turno</label>
+				<select class="form-control" th:field="*{turno}">
+					<option th:value="M" th:text="Matutino"></option>
+					<option th:value="N" th:text="Noturno"></option>
+				</select>
+			</div>
+		</div>	
+			
+		<div class="form-group">
+			<div class="col-md-8 offset-md-5">
+				<input type="submit" value="Salvar" class="btn btn-primary" 
+				name="Salvar">
+			</div>
+		</div>	
+	</form>
+
+	<footer class="bg-primary text-center text-lg-start">
+		<!-- Grid container -->
+			<!-- Copyright -->
+			<div class="text-center p-3" style= "color: #fff; font-weight: bold;">
+				© 2024 Copyright: SENAC
+			</div>
+	</footer>
+</html>
